@@ -39,3 +39,13 @@
   font-weight: 500;
   margin: 0 1rem;
 }
+
+.addbutton {
+  position: absolute;
+  right: 20px;
+  background-color: variables.$moss;
+  padding: 5px;
+  color: white;
+  border-radius: 10%;
+  cursor: pointer;
+}

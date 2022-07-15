@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-
 const adapter = createEntityAdapter();
 
 export const {
@@ -27,6 +26,18 @@ export const fetchAllPlayers = createAsyncThunk(
     return json;
   }
 );
+export const addPlayer = createAsyncThunk(
+  '/players/add',
+  async (initialPlayer) => {
+    const response = await fetch('/api/players', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(initialPlayer),
+    });
+    const json = response.json();
+    return json;
+  }
+);
 
 export const PLAYERS_INITIAL_STATE = adapter.getInitialState();
 
@@ -34,9 +45,13 @@ const { actions, reducer } = createSlice({
   name: 'players',
   initialState: PLAYERS_INITIAL_STATE,
   extraReducers: (builder) =>
-    builder.addCase(fetchAllPlayers.fulfilled, (state, action) => {
-      adapter.setAll(state, action.payload.items);
-    }),
+    builder
+      .addCase(fetchAllPlayers.fulfilled, (state, action) => {
+        adapter.setAll(state, action.payload.items);
+      })
+      .addCase(addPlayer.fulfilled, (state, action) => {
+        adapter.addOne(state, action.payload);
+      }),
 });
 
 export const {
