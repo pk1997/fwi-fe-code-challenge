@@ -46,3 +46,14 @@ $header-height: 2.5rem;
 .country {
   width: 6rem;
 }
+
+.sortIcon {
+  height: 30px;
+  width: 30px;
+}
+
+.sortSpan {
+  display: flex;
+  gap: 0.3rem;
+  cursor: pointer;
+}

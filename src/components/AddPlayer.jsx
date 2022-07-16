@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import styles from './modal.module.scss';
 import { useDispatch } from 'react-redux';
-import { addPlayer } from '../appState/players';
+import { addPlayer, editPlayer } from '../appState/players';
 import { COUNTRIES } from '../constants/countries';
 import { isValidHttpUrl } from '../constants/helpers';
-// import { NEW_PLAYER_SCHEMA } from '../server/controllers';
 
-const AddPlayer = ({ setIsOpen }) => {
+const AddPlayer = ({ setIsOpen, initialPlayer = {} }) => {
   const [formData, setFormData] = useState({
-    name: null,
-    imageUrl: null,
-    country: null,
-    winnings: null,
+    name: initialPlayer.name,
+    imageUrl: initialPlayer.imageUrl,
+    country: initialPlayer.country,
+    winnings: initialPlayer.winnings,
   });
   const [error, setErrors] = useState({
     fields: [],
   });
 
   const dispatch = useDispatch();
-
+  const onCancel = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     if (
@@ -27,21 +29,25 @@ const AddPlayer = ({ setIsOpen }) => {
       formData.winnings !== null &&
       formData.country !== null
     ) {
-      dispatch(addPlayer(formData)).unwrap();
-      setIsOpen(false);
+      if (initialPlayer.id) {
+        dispatch(editPlayer({ ...formData, id: initialPlayer.id })).unwrap();
+        setIsOpen(false);
+      } else {
+        dispatch(addPlayer(formData)).unwrap();
+        setIsOpen(false);
+      }
     }
   };
   const sortAndGetKeys = (COUNTRIES) => {
     return Object.keys(COUNTRIES).sort((a, b) => COUNTRIES[a] > COUNTRIES[b]);
   };
   const onValueChange = (e) => {
-    console.log(e.target.id, e.target.value);
     switch (e.target.id) {
       case 'name':
         setFormData({ ...formData, name: e.target.value });
         break;
       case 'image_url':
-        if (!isValidHttpUrl(e.target.value)) {
+        if (!isValidHttpUrl(e.target.value) && e.target.value !== '') {
           setErrors({
             fields: [...error.fields, 'imageUrl'],
           });
@@ -75,31 +81,35 @@ const AddPlayer = ({ setIsOpen }) => {
       <div className={styles.centered}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h5 className={styles.heading}>Add Player</h5>
+            <h5 className={styles.heading}>{`${
+              initialPlayer.id ? 'Edit' : 'Add'
+            } Player `}</h5>
           </div>
           <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
             {/* <RiCloseLine style={{ marginBottom: "-3px" }} /> */}
           </button>
           <div className={styles.modalContent}>
-            <form>
+            <form onSubmit={onSubmit}>
               <label htmlFor="fname">Name</label>
               <input
                 type="text"
                 className={styles.inputText}
                 id="name"
                 name="name"
-                placeholder="Player name.."
-                required
+                placeholder="Player name...."
                 onChange={onValueChange}
                 value={formData.name}
+                required
               />
+              {error.fields.includes('name') && (
+                <p className={styles.error}>Please Enter Name</p>
+              )}
               <label htmlFor="Image">Image URL</label>
               <input
                 className={styles.inputText}
                 id="image_url"
                 name="image_url"
                 placeholder="Image URL"
-                required
                 onChange={onValueChange}
                 value={formData.imageUrl}
               />
@@ -127,33 +137,26 @@ const AddPlayer = ({ setIsOpen }) => {
                 className={styles.inputSelect}
                 onChange={onValueChange}
                 value={formData.country}
+                required
               >
+                <option key={''} value={''}>
+                  {''}
+                </option>
                 {sortAndGetKeys(COUNTRIES).map((code) => (
                   <option key={code} value={code}>
                     {COUNTRIES[code]}
                   </option>
                 ))}
-                <option value="australia">Australia</option>
-                <option value="canada">Canada</option>
-                <option value="usa">USA</option>
               </select>
-              <div className={styles.modalActions}>
-                <div className={styles.actionsContainer}>
-                  <button
-                    className={styles.submitBtn}
-                    onClick={onSubmit}
-                    disabled
-                  >
-                    Add Player
-                  </button>
-                  <button
-                    className={styles.cancelBtn}
-                    onClick={() => setIsOpen(false)}
-                    disabled
-                  >
-                    Cancel
-                  </button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <button
+                  className={styles.submitBtn}
+                  type="submit"
+                  onSubmit={onSubmit}
+                >{`${initialPlayer.id ? 'Edit' : 'Add'} Player `}</button>
+                <button className={styles.cancelBtn} onClick={onCancel}>
+                  Cancel{' '}
+                </button>
               </div>
             </form>
           </div>

@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 import Flag from 'react-world-flags';
-
+import DeletePlayer from './DeletePlayer';
 import { getPlayers } from '../appState/players';
 import Avatar from './Avatar';
 import styles from './PlayerTableBody.module.scss';
-
+import EditPlayer from './EditPlayer';
 export default function PlayerTableBody() {
   const players = useSelector(getPlayers);
 
@@ -28,6 +28,14 @@ export default function PlayerTableBody() {
                 <Flag code={country} />
               </Avatar>
               {country}
+            </div>
+          </td>
+          <td>
+            <div className={styles.country}>
+              <DeletePlayer playerId={id} />
+              <EditPlayer
+                initialPlayer={{ id, name, winnings, country, imageUrl }}
+              />
             </div>
           </td>
         </tr>
