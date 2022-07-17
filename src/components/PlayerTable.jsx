@@ -6,7 +6,7 @@ import PlayerTableBody from './PlayerTableBody';
 import PlayerTableHeader from './PlayerTableHeader';
 import styles from './PlayerTable.module.scss';
 
-export default function PlayerTable() {
+export default function PlayerTable({ players }) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllPlayers());
@@ -15,7 +15,7 @@ export default function PlayerTable() {
   return (
     <table id="player-table" className={styles.table}>
       <PlayerTableHeader />
-      <PlayerTableBody />
+      <PlayerTableBody players={players} />
     </table>
   );
 }

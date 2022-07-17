@@ -32,9 +32,11 @@ const AddPlayer = ({ setIsOpen, initialPlayer = {} }) => {
       if (initialPlayer.id) {
         dispatch(editPlayer({ ...formData, id: initialPlayer.id })).unwrap();
         setIsOpen(false);
+        alert('Player Edited');
       } else {
         dispatch(addPlayer(formData)).unwrap();
         setIsOpen(false);
+        alert('Player Added');
       }
     }
   };
@@ -47,7 +49,7 @@ const AddPlayer = ({ setIsOpen, initialPlayer = {} }) => {
         setFormData({ ...formData, name: e.target.value });
         break;
       case 'image_url':
-        if (!isValidHttpUrl(e.target.value) && e.target.value !== '') {
+        if (!isValidHttpUrl(e.target.value)) {
           setErrors({
             fields: [...error.fields, 'imageUrl'],
           });

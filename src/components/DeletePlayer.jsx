@@ -6,13 +6,14 @@ export default function DeletePlayer({ playerId }) {
 
   const deletePlayer = (playerId) => {
     dispatch(deletePlayerAction(playerId)).unwrap();
+    alert('Player Deleted');
   };
   return (
     <>
+      {/* <p>Hello</p> */}
       <span
         onClick={() => deletePlayer(playerId)}
         style={{ cursor: 'pointer' }}
-        data-testid={`del-${playerId}`}
       >
         <Image
           src="https://img.icons8.com/ios-glyphs/60/000000/filled-trash.png"

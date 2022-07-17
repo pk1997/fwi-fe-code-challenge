@@ -1,11 +1,11 @@
 import Header from './Header';
-import PlayerTable from './PlayerTable';
+import PlayerTable from './pagination';
 
 export default function App() {
   return (
     <>
       <Header />
-      <PlayerTable />
+      <PlayerTable itemsPerPage={20} />
     </>
   );
 }

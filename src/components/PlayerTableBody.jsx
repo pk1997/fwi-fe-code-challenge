@@ -5,8 +5,8 @@ import { getPlayers } from '../appState/players';
 import Avatar from './Avatar';
 import styles from './PlayerTableBody.module.scss';
 import EditPlayer from './EditPlayer';
-export default function PlayerTableBody() {
-  const players = useSelector(getPlayers);
+export default function PlayerTableBody({ players }) {
+  players = players || [];
 
   return (
     <tbody className={styles.tbody}>
